@@ -28,7 +28,7 @@ namespace XbimXplorer.Dialogs
         {
             InitializeComponent();
             DataContext = this;
-            Logo.Source = new BitmapImage(new Uri(@"pack://application:,,/xBIM.ico", UriKind.RelativeOrAbsolute));
+            //Logo.Source = new BitmapImage(new Uri(@"pack://application:,,/BIM-Assure-logo.bmp", UriKind.RelativeOrAbsolute));
             _assembly = Assembly.GetEntryAssembly();
         }
 
@@ -83,7 +83,8 @@ namespace XbimXplorer.Dialogs
 
         private static void DocumentSingleAssembly(Assembly a, StringBuilder sb)
         {
-            if (!a.GetName().Name.ToLowerInvariant().Contains(@"xbim"))
+            //if (!a.GetName().Name.ToLowerInvariant().Contains(@"xbim"))
+            if (string.Compare(a.GetName().Name.ToLowerInvariant(), 0, "xbim", 0, 4) != 0)
                 return;
             var xa = new XbimAssemblyInfo(a);
             var assemblyDescription = string.Format("{0}\t{1}\t{2}\t{3}\r\n", a.GetName().Name, xa.AssemblyVersion,
@@ -102,7 +103,7 @@ namespace XbimXplorer.Dialogs
                     sb.AppendFormat("- {0} (Geometry Available: {1})\r\n", Model.FileName, Model.GeometryStore.IsEmpty?"No":"Yes");
                     foreach (var subModel in Model.ReferencedModels)
                     {
-                        sb.AppendFormat("- {0} (Geometry Available: {1})\r\n", subModel.Identifier, Model.GeometryStore.IsEmpty ? "No" : "Yes");
+                        sb.AppendFormat("- {0} (Geometry Available: {1})\r\n", (subModel.Model as IfcStore).FileName, subModel.Model.GeometryStore.IsEmpty ? "No" : "Yes");
                     }
                     sb.AppendLine();
                     sb.AppendLine("Model information:");

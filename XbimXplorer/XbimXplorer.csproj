@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>XbimXplorer</RootNamespace>
-    <AssemblyName>XbimXplorer</AssemblyName>
+    <AssemblyName>BAIfcXplorer</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -38,10 +38,10 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <InstallUrl>http://openbim.blob.core.windows.net/clickonce/</InstallUrl>
-    <SupportUrl>http://www.openBIM.org</SupportUrl>
-    <ProductName>xBIM Xplorer</ProductName>
-    <PublisherName>xBIM Team</PublisherName>
-    <SuiteName>xBIM Toolkit</SuiteName>
+    <SupportUrl>http://www.bimassure.com</SupportUrl>
+    <ProductName>BIM Assure IfcXplorer</ProductName>
+    <PublisherName>Invicara Inc</PublisherName>
+    <SuiteName>BIM Assure IfcXplorer</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
@@ -53,7 +53,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>xBIM.ico</ApplicationIcon>
+    <ApplicationIcon>BIM-Assure.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -78,8 +78,9 @@
     <ErrorReport>prompt</ErrorReport>
     <DebugSymbols>true</DebugSymbols>
     <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>..\Output\Release\XbimXplorer.XML</DocumentationFile>
+    <DocumentationFile>..\Output\Release\BAIfcXplorer.xml</DocumentationFile>
     <NoWarn>1591;1572;1573;1574</NoWarn>
+    <WarningLevel>0</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>CEE70F4E70E4A01BC6E9D3AEB8A70DFB58215C3F</ManifestCertificateThumbprint>
@@ -119,6 +120,49 @@
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\Output\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>..\Output\Release\BAIfcXplorer.XML</DocumentationFile>
+    <Optimize>false</Optimize>
+    <WarningLevel>0</WarningLevel>
+    <NoWarn>1591;1572;1573;1574</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug CarveCSG|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug CarveCSG\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release CarveCSG|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Release CarveCSG\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Esent.Interop, Version=1.9.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\ManagedEsent.1.9.4\lib\net40\Esent.Interop.dll</HintPath>
@@ -142,6 +186,10 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Web.XmlTransform, Version=2.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Xdt.2.1.1\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NPOI, Version=2.2.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
@@ -180,6 +228,7 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq">
@@ -202,48 +251,52 @@
     <Reference Include="PresentationFramework">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="Xbim.CobieExpress, Version=4.0.0.0, Culture=neutral, PublicKeyToken=11e3655e576ec5a9, processorArchitecture=MSIL">
-      <HintPath>..\packages\Xbim.Essentials.4.0.7\lib\net40\Xbim.CobieExpress.dll</HintPath>
+    <Reference Include="Xbim.CobieExpress, Version=4.0.0.0, Culture=neutral, PublicKeyToken=11e3655e576ec5a9, processorArchitecture=AMD64">
+      <HintPath>..\packages\Xbim.Essentials.4.0.27\lib\net40\Xbim.CobieExpress.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Xbim.Common, Version=4.0.0.0, Culture=neutral, PublicKeyToken=11e3655e576ec5a9, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Xbim.Essentials.4.0.7\lib\net40\Xbim.Common.dll</HintPath>
+    <Reference Include="Xbim.Common, Version=4.0.0.0, Culture=neutral, PublicKeyToken=11e3655e576ec5a9, processorArchitecture=AMD64">
+      <HintPath>..\packages\Xbim.Essentials.4.0.27\lib\net40\Xbim.Common.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Xbim.Geometry.Engine.Interop, Version=4.0.0.0, Culture=neutral, PublicKeyToken=11e3655e576ec5a9, processorArchitecture=MSIL">
-      <HintPath>..\packages\Xbim.Geometry.4.0.11\lib\net40\Xbim.Geometry.Engine.Interop.dll</HintPath>
+      <HintPath>..\packages\Xbim.Geometry.4.0.14\lib\net40\Xbim.Geometry.Engine.Interop.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Xbim.Ifc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=11e3655e576ec5a9, processorArchitecture=MSIL">
-      <HintPath>..\packages\Xbim.Essentials.4.0.7\lib\net40\Xbim.Ifc.dll</HintPath>
+    <Reference Include="Xbim.Ifc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=11e3655e576ec5a9, processorArchitecture=AMD64">
+      <HintPath>..\packages\Xbim.Essentials.4.0.27\lib\net40\Xbim.Ifc.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Xbim.Ifc.Extensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=11e3655e576ec5a9, processorArchitecture=MSIL">
-      <HintPath>..\packages\Xbim.Essentials.4.0.7\lib\net40\Xbim.Ifc.Extensions.dll</HintPath>
+    <Reference Include="Xbim.Ifc.Extensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=11e3655e576ec5a9, processorArchitecture=AMD64">
+      <HintPath>..\packages\Xbim.Essentials.4.0.27\lib\net40\Xbim.Ifc.Extensions.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Xbim.Ifc2x3, Version=4.0.0.0, Culture=neutral, PublicKeyToken=11e3655e576ec5a9, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Xbim.Essentials.4.0.7\lib\net40\Xbim.Ifc2x3.dll</HintPath>
-    </Reference>
-    <Reference Include="Xbim.Ifc2x3.IO, Version=4.0.0.0, Culture=neutral, PublicKeyToken=11e3655e576ec5a9, processorArchitecture=MSIL">
-      <HintPath>..\packages\Xbim.Essentials.4.0.7\lib\net40\Xbim.Ifc2x3.IO.dll</HintPath>
+    <Reference Include="Xbim.Ifc2x3, Version=4.0.0.0, Culture=neutral, PublicKeyToken=11e3655e576ec5a9, processorArchitecture=AMD64">
+      <HintPath>..\packages\Xbim.Essentials.4.0.27\lib\net40\Xbim.Ifc2x3.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Xbim.Ifc4, Version=4.0.0.0, Culture=neutral, PublicKeyToken=11e3655e576ec5a9, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Xbim.Essentials.4.0.7\lib\net40\Xbim.Ifc4.dll</HintPath>
+    <Reference Include="Xbim.Ifc2x3.IO, Version=4.0.0.0, Culture=neutral, PublicKeyToken=11e3655e576ec5a9, processorArchitecture=AMD64">
+      <HintPath>..\packages\Xbim.Essentials.4.0.27\lib\net40\Xbim.Ifc2x3.IO.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Xbim.IO, Version=4.0.0.0, Culture=neutral, PublicKeyToken=11e3655e576ec5a9, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Xbim.Essentials.4.0.7\lib\net40\Xbim.IO.dll</HintPath>
+    <Reference Include="Xbim.Ifc4, Version=4.0.0.0, Culture=neutral, PublicKeyToken=11e3655e576ec5a9, processorArchitecture=AMD64">
+      <HintPath>..\packages\Xbim.Essentials.4.0.27\lib\net40\Xbim.Ifc4.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xbim.IO, Version=4.0.0.0, Culture=neutral, PublicKeyToken=11e3655e576ec5a9, processorArchitecture=AMD64">
+      <HintPath>..\packages\Xbim.Essentials.4.0.27\lib\net40\Xbim.IO.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Xbim.ModelGeometry.Scene, Version=4.0.0.0, Culture=neutral, PublicKeyToken=11e3655e576ec5a9, processorArchitecture=MSIL">
-      <HintPath>..\packages\Xbim.Geometry.4.0.11\lib\net40\Xbim.ModelGeometry.Scene.dll</HintPath>
+      <HintPath>..\packages\Xbim.Geometry.4.0.14\lib\net40\Xbim.ModelGeometry.Scene.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Xbim.Tessellator, Version=4.0.0.0, Culture=neutral, PublicKeyToken=11e3655e576ec5a9, processorArchitecture=MSIL">
-      <HintPath>..\packages\Xbim.Essentials.4.0.7\lib\net40\Xbim.Tessellator.dll</HintPath>
+    <Reference Include="Xbim.Presentation">
+      <HintPath>..\packages\Xbim.WindowsUI.4.0.11\lib\net45\Xbim.Presentation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xbim.Tessellator, Version=4.0.0.0, Culture=neutral, PublicKeyToken=11e3655e576ec5a9, processorArchitecture=AMD64">
+      <HintPath>..\packages\Xbim.Essentials.4.0.27\lib\net40\Xbim.Tessellator.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Xceed.Wpf.AvalonDock, Version=2.0.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
@@ -293,6 +346,9 @@
       <DependentUpon>ExportWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Dialogs\FederationWindow.xaml.cs">
+      <DependentUpon>FederationWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="EditableTextBlock\EditableTextBlock.cs" />
     <Compile Include="EditableTextBlock\EditableTextBlockAdorner.cs" />
     <Compile Include="LogViewer\EventAppender.cs" />
@@ -321,6 +377,7 @@
       <DependentUpon>wdwCommands.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="xBimFederation.cs" />
     <Compile Include="XplorerMainWindow.Logging.xaml.cs">
       <DependentUpon>XplorerMainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -338,6 +395,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Dialogs\ExportWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\FederationWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -459,19 +520,12 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <FileAssociation Include=".xBIM">
-      <Visible>False</Visible>
-      <Description>xBIM files</Description>
-      <Progid>xBIM.Xplorer</Progid>
-      <DefaultIcon>xBIM.ico</DefaultIcon>
-    </FileAssociation>
+    <Content Include="BIM-Assure.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Xbim.Presentation\Xbim.Presentation.csproj">
-      <Project>{89F98E53-DE4E-4427-8244-D5934AD08849}</Project>
-      <Name>Xbim.Presentation</Name>
-    </ProjectReference>
+    <Resource Include="BIM-Assure-logo.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
@@ -484,13 +538,16 @@
     <HalfMinuteOfDay>$([System.Convert]::ToInt16($([MSBuild]::Divide($(MinuteOfDay), 2))))</HalfMinuteOfDay>
     <AssemblyFileVersionAttribute>[assembly:System.Reflection.AssemblyFileVersion("4.0.$(Year)$(Month).$(Day)$(HalfMinuteOfDay)")];</AssemblyFileVersionAttribute>
   </PropertyGroup>
-  <Import Project="..\packages\Xbim.Geometry.4.0.11\build\Xbim.Geometry.targets" Condition="Exists('..\packages\Xbim.Geometry.4.0.11\build\Xbim.Geometry.targets')" />
+  <Import Project="..\packages\Xbim.Geometry.4.0.14\build\Xbim.Geometry.targets" Condition="Exists('..\packages\Xbim.Geometry.4.0.14\build\Xbim.Geometry.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Xbim.Geometry.4.0.11\build\Xbim.Geometry.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Xbim.Geometry.4.0.11\build\Xbim.Geometry.targets'))" />
+    <Error Condition="!Exists('..\packages\Xbim.Geometry.4.0.14\build\Xbim.Geometry.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Xbim.Geometry.4.0.14\build\Xbim.Geometry.targets'))" />
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>copy $(ProjectDir)\BIM-Assure.ico $(TargetDir)</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

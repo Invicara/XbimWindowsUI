@@ -5,43 +5,39 @@
         Deactivated="AboutWindow_OnDeactivated"
         MouseLeftButtonDown="UserControl_MouseLeftButtonDown"
         >
-    <Border Padding="5" BorderBrush="Black" BorderThickness="1">
-        <Grid >
+   <Border Padding="5" BorderBrush="Black" BorderThickness="1">
+      <Grid >
 
-            <Image x:Name="Logo" HorizontalAlignment="Left" Height="50" Margin="424,10,10,10" VerticalAlignment="Top" Width="50" Stretch="None"/>
+         <Image x:Name="Logo" HorizontalAlignment="Left" Height="32" Margin="362,10,0,0" VerticalAlignment="Top" Width="116" Source="/XbimXplorer;component/BIM-Assure-logo.bmp"/>
 
-            <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="xBIM Xplorer" VerticalAlignment="Top" FontSize="24" />
-            <TextBlock Margin="10,42,0,0" TextWrapping="Wrap">This application is a demonstrator of the xBIM toolkit.</TextBlock>
-            <TabControl Margin="10,65,10,10" >
-                <TabItem Header="Application">
-                    <StackPanel Margin="10" >
-                        <TextBlock Margin="0,3" TextWrapping="Wrap" >
-                            The xBIM toolkit is an Open Source software initiative to help software developers and
-                            researchers to support the next generation of BIM tools. Unlike other open source application
-                            xBIM license is compatible with commercial environments.
-                        </TextBlock>
-                        <TextBlock Margin="0,3" >
+         <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="24" ><Run Text="BIM Assure IfcXplorer"/><LineBreak/><Run/></TextBlock>
+         <TextBlock Margin="10,56,0,0" TextWrapping="Wrap" Text="Application to generate BIM Assure compliant package files from IFC using Xbim"/>
+         <TabControl Margin="10,79,10,10" >
+            <TabItem Header="Application">
+               <StackPanel Margin="10" >
+                  <TextBlock Margin="0,3" TextWrapping="Wrap" Text="This application uses xBIM toolkit, which is an Open Source software initiative to help software developers and researchers to support the next generation of BIM tools. Notice on xBIM license can be found here:" />
+                  <TextBlock Margin="0,3" >
                             <Hyperlink RequestNavigate="Link_RequestNavigate" NavigateUri="https://github.com/xBimTeam/XbimEssentials/blob/master/LICENCE.md">
 					            <TextBlock Text="https://github.com/xBimTeam/XbimEssentials/blob/master/LICENCE.md"/>
 				            </Hyperlink>
                         </TextBlock>
-                        <TextBlock TextWrapping="Wrap" Margin="0,3" Text="{Binding AppVersion}" />
-                        <TextBlock TextWrapping="Wrap" Margin="0,3" Text="{Binding FileVersion}" />
-                        <TextBlock Margin="0,3" >
+                  <TextBlock TextWrapping="Wrap" Margin="0,3" Text="{Binding AppVersion}" />
+                  <TextBlock TextWrapping="Wrap" Margin="0,3" Text="The original source codes for Xbim can be found here:" />
+                  <TextBlock Margin="0,3" >
                             <Hyperlink RequestNavigate="Link_RequestNavigate" NavigateUri="https://github.com/xbimteam">
 					            <TextBlock Text="https://github.com/xbimteam"/>
 				            </Hyperlink>
                         </TextBlock>
-                    </StackPanel>
-                </TabItem>
-                <TabItem Header="Assemblies">
-                    <TextBox VerticalScrollBarVisibility="Auto" Margin="10" Text="{Binding AssembliesInfo, Mode=OneWay}" />
-                </TabItem>
-                <TabItem Header="Model">
-                    <TextBox VerticalScrollBarVisibility="Auto" Margin="10" Text="{Binding ModelInfo, Mode=OneWay}" />
-                </TabItem>
-            </TabControl>
-        </Grid>
-    </Border>
+               </StackPanel>
+            </TabItem>
+            <TabItem Header="Assemblies">
+               <TextBox VerticalScrollBarVisibility="Auto" Margin="10" Text="{Binding AssembliesInfo, Mode=OneWay}" />
+            </TabItem>
+            <TabItem Header="Model">
+               <TextBox VerticalScrollBarVisibility="Auto" Margin="10" Text="{Binding ModelInfo, Mode=OneWay}" />
+            </TabItem>
+         </TabControl>
+      </Grid>
+   </Border>
 
 </Window>

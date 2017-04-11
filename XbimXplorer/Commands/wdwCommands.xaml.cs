@@ -1512,7 +1512,7 @@ namespace XbimXplorer.Commands
             {
                 propLabel = pe.EntityLabel;
                 retIds.Add(pe.EntityLabel);
-                pe.Activate(false);
+                //pe.Activate(false);
             }
             var ret = propVal.ToString();
             if (ret == propVal.GetType().FullName)

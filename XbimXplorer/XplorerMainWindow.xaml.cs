@@ -27,6 +27,7 @@ using log4net.Config;
 using log4net.Repository.Hierarchy;
 using Microsoft.Win32;
 using Xbim.Common;
+using Xbim.Common.Federation;
 using Xbim.Common.Step21;
 using Xbim.Ifc;
 using Xbim.IO.Esent;
@@ -40,6 +41,7 @@ using XbimXplorer.Dialogs;
 using XbimXplorer.Dialogs.ExcludedTypes;
 using XbimXplorer.LogViewer;
 using XbimXplorer.Properties;
+using Newtonsoft.Json;
 
 #endregion
 
@@ -85,8 +87,8 @@ namespace XbimXplorer
             Dispatcher.BeginInvoke(new Action(delegate
             {
                 Title = string.IsNullOrEmpty(ifcFilename)
-                    ? "Xbim Xplorer" :
-                    "Xbim Xplorer - [" + ifcFilename + "]";
+                    ? "BIM Assure IfcXplorer" :
+                    "BIM Assure IfcXplorer - [" + ifcFilename + "]";
             }));
         }
 
@@ -201,46 +203,56 @@ namespace XbimXplorer
         {
             var worker = s as BackgroundWorker;
             var ifcFilename = args.Argument as string;
+            IfcStore model = null;
 
             try
             {
                 if (worker == null) throw new Exception("Background thread could not be accessed");
                 _temporaryXbimFileName = Path.GetTempFileName();
                 SetOpenedModelFileName(ifcFilename);
-                var model = IfcStore.Open(ifcFilename, null, null, worker.ReportProgress, FileAccessMode);
-                if (model.GeometryStore.IsEmpty)
+                string extName = Path.GetExtension(ifcFilename);
+                if (extName.Equals(".xbimf"))
                 {
-                    var context = new Xbim3DModelContext(model);
+                    model = OpenFederatedModel(ifcFilename);
+                }
+                else
+                {
+                    FederationInfo = null;
+                    model = IfcStore.Open(ifcFilename, null, null, worker.ReportProgress, FileAccessMode);
+                    if (model.GeometryStore.IsEmpty)
+                    {
+                        var context = new Xbim3DModelContext(model);
                         //upgrade to new geometry representation, uses the default 3D model
-                    context.CreateContext(progDelegate: worker.ReportProgress);
-                }
-                foreach (var modelReference in model.ReferencedModels)
-                {
-                    // creates federation geometry contexts if needed
-                    Debug.WriteLine(modelReference.Name);
-                    if (modelReference.Model == null) 
-                        continue;
-                    if (!modelReference.Model.GeometryStore.IsEmpty) 
-                        continue;
-                    var context = new Xbim3DModelContext(modelReference.Model);
-                    //upgrade to new geometry representation, uses the default 3D model
-                    context.CreateContext(worker.ReportProgress);
-                }
-                if (worker.CancellationPending) //if a cancellation has been requested then don't open the resulting file
-                {
-                    try
-                    {
-                        model.Close();
-                        if (File.Exists(_temporaryXbimFileName))
-                            File.Delete(_temporaryXbimFileName); //tidy up;
-                        _temporaryXbimFileName = null;
-                        SetOpenedModelFileName(null);
+                        context.CreateContext(progDelegate: worker.ReportProgress);
                     }
-                    catch (Exception ex)
+                    foreach (var modelReference in model.ReferencedModels)
                     {
-                        Log.Error(ex.Message, ex);
+                        // creates federation geometry contexts if needed
+                        Debug.WriteLine(modelReference.Name);
+                        if (modelReference.Model == null)
+                            continue;
+                        if (!modelReference.Model.GeometryStore.IsEmpty)
+                            continue;
+                        var context = new Xbim3DModelContext(modelReference.Model);
+                        //upgrade to new geometry representation, uses the default 3D model
+                        context.CreateContext(worker.ReportProgress);
                     }
-                    return;
+                    if (worker.CancellationPending) //if a cancellation has been requested then don't open the resulting file
+                    {
+                        try
+                        {
+                            model.Close();
+                            if (File.Exists(_temporaryXbimFileName))
+                                File.Delete(_temporaryXbimFileName); //tidy up;
+                            _temporaryXbimFileName = null;
+                            SetOpenedModelFileName(null);
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex.Message, ex);
+                        }
+                        return;
+                    }
                 }
                 args.Result = model;
             }
@@ -399,7 +411,7 @@ namespace XbimXplorer
                     if (string.IsNullOrWhiteSpace(s)) 
                         return;
                     var extension = s.ToLowerInvariant();
-                    if (extension != "xbim" || string.IsNullOrWhiteSpace(_temporaryXbimFileName)) 
+                    if (extension != ".xbim" || string.IsNullOrWhiteSpace(_temporaryXbimFileName)) 
                         return;
                     File.Delete(_temporaryXbimFileName);
                     _temporaryXbimFileName = null;
@@ -453,6 +465,7 @@ namespace XbimXplorer
         private void CommandBinding_Close(object sender, ExecutedRoutedEventArgs e)
         {
             CloseAndDeleteTemporaryFiles();
+            _openedModelFileName = null;
         }
 
         private void CommandBinding_Open(object sender, ExecutedRoutedEventArgs e)
@@ -476,6 +489,7 @@ namespace XbimXplorer
                 SetOpenedModelFileName(null);
                 if (Model != null)
                 {
+                    Model.Close();     // Make sure we close the model (cache) properly
                     Model.Dispose();
                     ModelProvider.ObjectInstance = null;
                     ModelProvider.Refresh();
@@ -522,16 +536,83 @@ namespace XbimXplorer
         #endregion
 
         # region "Federation Model operations"
+        private XBimFederation FederationInfo;
+
         private void EditFederationCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            var fdlg = new FederatedModelDialog {DataContext = Model};
-            var done = fdlg.ShowDialog();
-            if (done.HasValue && done.Value)
-            {
-                // todo: is there something that needs to happen here?
-            }
-            DrawingControl.ReloadModel();
+            //var fdlg = new FederatedModelDialog {DataContext = Model};
+            //var done = fdlg.ShowDialog();
+            //if (done.HasValue && done.Value)
+            //{
+            //    // todo: is there something that needs to happen here?
+            //}
+
+            FederationWindow fedWin = new FederationWindow(FederationInfo.MemberFileList);
+            fedWin.federationName = FederationInfo.FederationName;
+            fedWin.textBox_Name.Text = FederationInfo.FederationName;
+            fedWin.federationDescription = FederationInfo.FederationDescription;
+            fedWin.textBox_Description.Text = FederationInfo.FederationDescription;
+            fedWin.textBox_FederatedFileName.Text = _openedModelFileName;
+            fedWin.federationFileName = _openedModelFileName;
+            fedWin.checkBox_RelativePath.IsChecked = FederationInfo.UseRelativePath;
+            fedWin.checkBox_RelativePath.IsEnabled = false;
+
+            // lock the federation file name information for editing purpose
+            fedWin.textBox_FederatedFileName.IsReadOnly = true;
+            fedWin.button_BrowseFederatedFileName.IsEnabled = false;
+            fedWin.isEdit = true;
+            bool? ret = fedWin.ShowDialog();
+
+            if (ret.HasValue)
+                if (ret.Value)
+                {
+                    if (Model.IsFederation)
+                    {
+                        IList<string> modelList = new List<string>();
+                        IList<string> modelsToRemove = new List<string>();
+                        foreach (string item in fedWin.listBox_FederationList.Items)
+                            modelList.Add(item);
+
+                        foreach (IReferencedModel refModel in Model.ReferencedModels)
+                        {
+                            IfcStore rModel = refModel.Model as IfcStore;
+                            if (modelList.Contains(rModel.FileName))
+                                modelList.Remove(rModel.FileName);
+                            else
+                                modelsToRemove.Add(rModel.FileName);
+                        }
+
+                        // Loop through models that need to be removed. (Since Xbim does not have this function, we will reload the federation with the new List)
+                        if (modelsToRemove.Count > 0)
+                        {
+                            // The federation list will be updated by removing those need to be removed and adding the new ones
+                            foreach (string modelToRemove in modelsToRemove)
+                                FederationInfo.Remove(modelToRemove);
+                            foreach (string modelToAdd in modelList)
+                                FederationInfo.Add(modelToAdd);
+                            FederationInfo.Save(fedWin.textBox_FederatedFileName.Text);
+                            CloseAndDeleteTemporaryFiles();
+                            LoadAnyModel(fedWin.textBox_FederatedFileName.Text);
+                        }
+                        else
+                        {
+                            // The change only involves new models added, we can use add model reference
+                            int i = 0;
+                            bool informUser = true;
+                            foreach (string modelToAdd in modelList)
+                            {
+                                if (!addReferencedModel(modelToAdd, Model, i++, informUser, out informUser))
+                                    break;      // The process is being cancelled by user
+                                FederationInfo.Add(modelToAdd);
+                            }
+                            FederationInfo.Save(fedWin.textBox_FederatedFileName.Text);
+                            SpatialControl.Regenerate();
+                        }
+                    }
+                    DrawingControl.ReloadModel();
+                }
         }
+
         private void EditFederationCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = Model != null && Model.IsFederation;
@@ -539,105 +620,236 @@ namespace XbimXplorer
        
         private void CreateFederationCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            var dlg = new OpenFileDialog
-            {
-                Title = "Select model files to federate.",
-                Filter = "Model Files|*.ifc;*.ifcxml;*.ifczip", // Filter files by extension 
-                CheckFileExists = true,
-                Multiselect = true
-            };
+            //var dlg = new OpenFileDialog
+            //{
+            //    Title = "Select model files to federate.",
+            //    Filter = "Model Files|*.ifc;*.ifcxml;*.ifczip", // Filter files by extension 
+            //    CheckFileExists = true,
+            //    Multiselect = true
+            //};
 
-            var done = dlg.ShowDialog(this);
+            //var done = dlg.ShowDialog(this);
 
-            if (!done.Value)
+            //if (!done.Value)
+            //    return;
+
+            //FederationFromDialogbox(dlg);
+            FederationWindow fedWin = new FederationWindow();
+            bool? ret = fedWin.ShowDialog();
+            if (fedWin.IsCanceled)
                 return;
+            if (ret.HasValue)
+                if (!ret.Value)
+                    return;
 
-            FederationFromDialogbox(dlg);
+            FederationFromDialogbox(fedWin);
         }
 
-
-        private void FederationFromDialogbox(OpenFileDialog dlg)
+        //private void FederationFromDialogbox(OpenFileDialog dlg)
+        private void FederationFromDialogbox(FederationWindow fedWin)
         {
-            if (!dlg.FileNames.Any())
-                return;
+            if (fedWin.FederatedModelList.Count == 0)
+            return;
+
+            XBimFederation xFed = new XBimFederation(fedWin.federationName, fedWin.federationDescription);
+            // Assign attributes XBimFederation
+            foreach (string memberFile in fedWin.listBox_FederationList.Items)
+                xFed.Add(memberFile);
+            xFed.UseRelativePath = fedWin.useRelativePath;
+            xFed.fedFilePath = fedWin.textBox_FederatedFileName.Text;
+
+            //if (!dlg.FileNames.Any())
+            //       return;
             //use the first filename it's extension to decide which action should happen
-            var s = Path.GetExtension(dlg.FileNames[0]);
+            //var s = Path.GetExtension(dlg.FileNames[0]);
+            string s = Path.GetExtension(fedWin.FederatedModelList[0]);
             if (s == null)
-                return;
+            return;
             var firstExtension = s.ToLower();
 
             IfcStore fedModel = null;
             switch (firstExtension)
             {
                 case ".xbimf":
-                    if (dlg.FileNames.Length > 1)
+                    //if (dlg.FileNames.Length > 1)
+                    if (fedWin.FederatedModelList.Count > 1)
                     {
-                        var res = MessageBox.Show("Multiple files selected, open " + dlg.FileNames[0] + "?",
+                        //var res = MessageBox.Show("Multiple files selected, open " + dlg.FileNames[0] + "?",
+                        var res = MessageBox.Show("Multiple files selected, open " + fedWin.FederatedModelList[0] + "?",
                             "Cannot open multiple Xbim files",
                             MessageBoxButton.OKCancel, MessageBoxImage.Warning);
                         if (res == MessageBoxResult.Cancel)
                             return;
-                        fedModel = IfcStore.Open(dlg.FileNames[0], null, true);
+                        //fedModel = IfcStore.Open(dlg.FileNames[0], null, null);
+                        fedModel = OpenFederatedModel(fedWin.FederatedModelList[0]);
                     }
                     break;
                 case ".ifc":
                 case ".ifczip":
                 case ".ifcxml":
-                    // create temp file as a placeholder for the temporory xbim file                   
-                    fedModel = IfcStore.Create(null,IfcSchemaVersion.Ifc2X3, XbimStoreType.InMemoryModel);                    
-                    using (var txn = fedModel.BeginTransaction())
-                    {
-                        var project = fedModel.Instances.New<Xbim.Ifc2x3.Kernel.IfcProject>();
-                        project.Name = "Default Project Name";
-                        project.Initialize(ProjectUnits.SIUnitsUK);
-                        txn.Commit();
-                    }
+                    fedModel = ProcessFederatedModel(xFed);
+                    //// create temp file as a placeholder for the temporory xbim file                   
+                    //fedModel = IfcStore.Create(null,IfcSchemaVersion.Ifc4, XbimStoreType.InMemoryModel);                    
+                    //using (var txn = fedModel.BeginTransaction())
+                    //{
+                    //    var project = fedModel.Instances.New<Xbim.Ifc4.Kernel.IfcProject>();
+                    //    //project.Name = "Default Project Name";
+                    //    project.Name = xFed.FederationName;
+                    //    project.LongName = xFed.FederationName + " - Federation";
+                    //    project.Description = xFed.FederationDescription;
+                    //    project.Initialize(ProjectUnits.SIUnitsUK);
+                    //    txn.Commit();
+                    //}
 
-                    var informUser = true;
-                    for (var i = 0; i < dlg.FileNames.Length; i++)
-                    {
-                        var fileName = dlg.FileNames[i];
-                        var temporaryReference = new XbimReferencedModelViewModel
-                        {
-                            Name = fileName,
-                            OrganisationName = "OrganisationName " + i,
-                            OrganisationRole = "Undefined"
-                        };
+                    //var informUser = true;
+                    //for (var i = 0; i < fedWin.FederatedModelList.Count; i++)
+                    //{
+                    //    var fileName = fedWin.FederatedModelList[i];
+                    //    var temporaryReference = new XbimReferencedModelViewModel
+                    //    {
+                    //        Name = fileName,
+                    //        OrganisationName = "OrganisationName " + i,
+                    //        OrganisationRole = "Undefined"
+                    //    };
 
-                        var buildRes = false;
-                        Exception exception = null;
-                        try
-                        {
-                            buildRes = temporaryReference.TryBuildAndAddTo(fedModel);
-                        }
-                        catch (Exception ex)
-                        {
-                            //usually an EsentDatabaseSharingViolationException, user needs to close db first
-                            exception = ex;
-                        }
+                    //    var buildRes = false;
+                    //    Exception exception = null;
+                    //    try
+                    //    {
+                    //        buildRes = temporaryReference.TryBuildAndAddTo(fedModel);
+                    //    }
+                    //    catch (Exception ex)
+                    //    {
+                    //        //usually an EsentDatabaseSharingViolationException, user needs to close db first
+                    //        exception = ex;
+                    //    }
 
-                        if (buildRes || !informUser)
-                            continue;
-                        var msg = exception == null ? "" : "\r\nMessage: " + exception.Message;
-                        var res = MessageBox.Show(fileName + " couldn't be opened." + msg + "\r\nShow this message again?",
-                            "Failed to open a file", MessageBoxButton.YesNoCancel, MessageBoxImage.Error);
-                        if (res == MessageBoxResult.No)
-                            informUser = false;
-                        else if (res == MessageBoxResult.Cancel)
-                        {
-                            fedModel = null;
-                            break;
-                        }
-                    }
+                    //    if (buildRes || !informUser)
+                    //        continue;
+                    //    var msg = exception == null ? "" : "\r\nMessage: " + exception.Message;
+                    //    var res = MessageBox.Show(fileName + " couldn't be opened." + msg + "\r\nShow this message again?",
+                    //        "Failed to open a file", MessageBoxButton.YesNoCancel, MessageBoxImage.Error);
+                    //    if (res == MessageBoxResult.No)
+                    //        informUser = false;
+                    //    else if (res == MessageBoxResult.Cancel)
+                    //    {
+                    //        fedModel = null;
+                    //        break;
+                    //    }
+                    //}
                     break;
             }
             if (fedModel == null)
                 return;
-            CloseAndDeleteTemporaryFiles();
+
+            FederationInfo = xFed;      // Keep the federation info
+            _openedModelFileName = fedWin.federationFileName;
+            //CloseAndDeleteTemporaryFiles();
             ModelProvider.ObjectInstance = fedModel;
             ModelProvider.Refresh();
         }
         
+        IfcStore OpenFederatedModel (string fileName)
+        {
+            XBimFederation xFedModel = JsonConvert.DeserializeObject<XBimFederation>(File.ReadAllText(fileName));
+            xFedModel.fedFilePath = fileName;
+            IfcStore fedModel = ProcessFederatedModel(xFedModel);
+            FederationInfo = xFedModel;
+            return fedModel;
+        }
+
+        IfcStore ProcessFederatedModel(XBimFederation xFed)
+        {
+            IfcStore fedModel = IfcStore.Create(null, IfcSchemaVersion.Ifc4, XbimStoreType.InMemoryModel);
+            using (var txn = fedModel.BeginTransaction())
+            {
+                var project = fedModel.Instances.New<Xbim.Ifc4.Kernel.IfcProject>();
+                //project.Name = "Default Project Name";
+                project.Name = xFed.FederationName;
+                project.LongName = xFed.FederationName + " - Federation";
+                project.Description = xFed.FederationDescription;
+                project.Initialize(ProjectUnits.SIUnitsUK);
+                txn.Commit();
+            }
+
+            var informUser = true;
+            for (var i = 0; i < xFed.GetMemberModelList().Count; i++)
+            {
+                var fileName = xFed.GetMemberModelList()[i].ModelFileName;
+                if (!addReferencedModel(fileName, fedModel, i, informUser, out informUser))
+                    break;      // The process is being cancelled by user
+
+                //var temporaryReference = new XbimReferencedModelViewModel
+                //{
+                //    Name = fileName,
+                //    OrganisationName = "OrganisationName " + i,
+                //    OrganisationRole = "Undefined"
+                //};
+
+                //var buildRes = false;
+                //Exception exception = null;
+                //try
+                //{
+                //    buildRes = temporaryReference.TryBuildAndAddTo(fedModel);
+                //}
+                //catch (Exception ex)
+                //{
+                //    //usually an EsentDatabaseSharingViolationException, user needs to close db first
+                //    exception = ex;
+                //}
+
+                //if (buildRes || !informUser)
+                //    continue;
+                //var msg = exception == null ? "" : "\r\nMessage: " + exception.Message;
+                //var res = MessageBox.Show(fileName + " couldn't be opened." + msg + "\r\nShow this message again?",
+                //    "Failed to open a file", MessageBoxButton.YesNoCancel, MessageBoxImage.Error);
+                //if (res == MessageBoxResult.No)
+                //    informUser = false;
+                //else if (res == MessageBoxResult.Cancel)
+                //{
+                //    fedModel = null;
+                //    break;
+                //}
+            }
+            return fedModel;
+        }
+
+        bool addReferencedModel(string fileName, IfcStore fedModel, int counter, bool informUser, out bool userRespOnInfo)
+        {
+            userRespOnInfo = true;
+            var temporaryReference = new XbimReferencedModelViewModel
+            {
+                Name = fileName,
+                OrganisationName = "OrganisationName " + counter,
+                OrganisationRole = "Undefined"
+            };
+
+            var buildRes = false;
+            Exception exception = null;
+            try
+            {
+                buildRes = temporaryReference.TryBuildAndAddTo(fedModel);
+            }
+            catch (Exception ex)
+            {
+                //usually an EsentDatabaseSharingViolationException, user needs to close db first
+                exception = ex;
+            }
+
+            if (buildRes || !informUser)
+                return true;
+            var msg = exception == null ? "" : "\r\nMessage: " + exception.Message;
+            var res = MessageBox.Show(fileName + " couldn't be opened." + msg + "\r\nShow this message again?",
+                "Failed to open a file", MessageBoxButton.YesNoCancel, MessageBoxImage.Error);
+            if (res == MessageBoxResult.No)
+                userRespOnInfo = false;
+            else if (res == MessageBoxResult.Cancel)
+            {
+                fedModel = null;
+                return false;
+            }
+            return true;
+        }
         #endregion
 
         /// <summary>

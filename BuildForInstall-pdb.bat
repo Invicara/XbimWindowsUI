@@ -5,7 +5,7 @@ nuget restore "Xbim.WindowsUI.Nuget.sln"
 sleep 2
 nuget restore "Xbim.WindowsUI.Nuget.sln"
 
-"C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\devenv.exe" "Xbim.WindowsUI.Nuget.sln" /build "ReleaseWithPDB|Any CPU"
+"C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\devenv.exe" "Xbim.WindowsUI.Nuget.sln" /build "ReleaseWithPDB|x64"
 nuget pack Xbim.WindowsUI.package.nuspec
 copy Xbim.*.nupkg ..\LocalPackages
 del Xbim.*.nupkg

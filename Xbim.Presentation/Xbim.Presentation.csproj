@@ -90,7 +90,8 @@
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\Output\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
-    <DocumentationFile>..\Output\Release\Xbim.Presentation.XML</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
     <Optimize>false</Optimize>
     <NoWarn>1591;1572;1573;1574</NoWarn>
     <DebugType>pdbonly</DebugType>
@@ -100,10 +101,10 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseWithPDB|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x64\ReleaseWithPDB\</OutputPath>
+    <OutputPath>..\Output\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <DocumentationFile>..\Output\Release\Xbim.Presentation.XML</DocumentationFile>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <NoWarn>1591;1572;1573;1574</NoWarn>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x64</PlatformTarget>

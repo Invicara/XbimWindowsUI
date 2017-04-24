@@ -761,6 +761,7 @@ namespace XbimXplorer
         IfcStore ProcessFederatedModel(XBimFederation xFed)
         {
             IfcStore fedModel = IfcStore.Create(null, IfcSchemaVersion.Ifc4, XbimStoreType.InMemoryModel);
+            fedModel.FileName = xFed.fedFilePath;
             using (var txn = fedModel.BeginTransaction())
             {
                 var project = fedModel.Instances.New<Xbim.Ifc4.Kernel.IfcProject>();

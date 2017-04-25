@@ -11,5 +11,5 @@ copy Xbim.*.nupkg ..\LocalPackages
 del Xbim.*.nupkg
 
 rm -rf ..\..\EmpireRevit\BAIFC\Installer\BAIfcXplorer\*
-cp -r Output\Release\* ..\..\EmpireRevit\BAIFC\Installer\BAIfcXplorer
+cp -rf Output\Release\* ..\..\EmpireRevit\BAIFC\Installer\BAIfcXplorer
 

@@ -90,8 +90,7 @@
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\Output\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
-    <DocumentationFile>
-    </DocumentationFile>
+    <DocumentationFile>..\Output\Release\Xbim.Presentation.XML</DocumentationFile>
     <Optimize>false</Optimize>
     <NoWarn>1591;1572;1573;1574</NoWarn>
     <DebugType>pdbonly</DebugType>

@@ -1,4 +1,9 @@
-﻿using System;
+﻿/*
+ * Modification notice:
+ * - Minor changes in the About dialog as it is customized for BIM Assure IFC Xplorer
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;

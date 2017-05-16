@@ -1,4 +1,9 @@
-﻿using System;
+﻿/*
+ * Commented an offending line that break the compilation:
+ *   // pe.Activate(false);
+ */
+
+ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;

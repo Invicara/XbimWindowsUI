@@ -1,4 +1,12 @@
-﻿using System.Collections.Generic;
+﻿/*
+ * Modification notice:
+ * @Author: Wawan Solihin (wawan.solihin@invicara.com)
+ * This is a modified version of the code that fixes issue related to the TreeView in the Xplorer:
+ * - The tree view now works also with a federated model
+ * - the tree view group tab also now works for a federated model
+ */
+
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;

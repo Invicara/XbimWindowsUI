@@ -1,4 +1,12 @@
-﻿using System;
+﻿/*
+ * Modification notice:
+ * @Author: Wawan Solihin (wawan.solihin@invicara.com)
+ * This is an additional class to support the simplified federaed model file .xbimf using Json file format and consists primarily the information about what files
+ * are included as members to the federation.
+ * The improvement involves support for a relative path so that the the federated set is portable
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

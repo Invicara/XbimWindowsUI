@@ -1,8 +1,22 @@
 ﻿#region XbimHeader
 
+/*
+ * Modification notice:
+ * @Author: Wawan Solihin (wawan.solihin@invicara.com)
+ * This is a modified version of the code. The original XbiMWindowsUI has been broken for the federated model especially missing handling of the new MemoryModel,
+ * even though many of the underlying supports are there in the Xbim.Essentials module.
+ * This change alters the way xbim federation works from the original one in some ways make it simpler but at the same time better:
+ * - The .xbimf file is replaced with a simple Json file that carries only basic information about:
+ *   + what files are the members of the federation and their path (may be relative path)
+ *   + the individual transformation of the model (not yet used at the moment)
+ *   + simple information about the federation name and description
+ * - New IUs are added to support the above .xbimf
+ *
+ * The Original: 
 // The eXtensible Building Information Modelling (xBIM) Toolkit
 // Project:     XbimXplorer
 // Published:   01, 2012
+*/
 
 #endregion
 

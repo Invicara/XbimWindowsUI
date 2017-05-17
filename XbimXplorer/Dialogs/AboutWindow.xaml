@@ -1,7 +1,7 @@
 ﻿<Window x:Class="XbimXplorer.Dialogs.AboutWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="AboutWindow" Height="340" Width="500" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" WindowStyle="None"
+        Title="AboutWindow" Height="361.795" Width="500" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" WindowStyle="None"
         Deactivated="AboutWindow_OnDeactivated"
         MouseLeftButtonDown="UserControl_MouseLeftButtonDown"
         >
@@ -14,7 +14,7 @@
          <TextBlock Margin="10,56,0,0" TextWrapping="Wrap" Text="Application to generate BIM Assure compliant package files from IFC using Xbim"/>
          <TabControl Margin="10,79,10,10" >
             <TabItem Header="Application">
-               <StackPanel Margin="10" >
+               <StackPanel Margin="10" CanVerticallyScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" >
                   <TextBlock Margin="0,3" TextWrapping="Wrap" Text="This application uses xBIM toolkit, which is an Open Source software initiative to help software developers and researchers to support the next generation of BIM tools. Notice on xBIM license can be found here:" />
                   <TextBlock Margin="0,3" >
                             <Hyperlink RequestNavigate="Link_RequestNavigate" NavigateUri="https://github.com/xBimTeam/XbimEssentials/blob/master/LICENCE.md">
@@ -22,12 +22,21 @@
 				            </Hyperlink>
                         </TextBlock>
                   <TextBlock TextWrapping="Wrap" Margin="0,3" Text="{Binding AppVersion}" />
-                  <TextBlock TextWrapping="Wrap" Margin="0,3" Text="The original source codes for Xbim can be found here:" />
+                  <TextBlock TextWrapping="Wrap" Margin="0,3" Text="The original source codes for Xbim and the modifications can be found here:" />
                   <TextBlock Margin="0,3" >
                             <Hyperlink RequestNavigate="Link_RequestNavigate" NavigateUri="https://github.com/xbimteam">
 					            <TextBlock Text="https://github.com/xbimteam"/>
 				            </Hyperlink>
                         </TextBlock>
+                  <TextBlock Margin="0,3" ><Hyperlink RequestNavigate="Link_RequestNavigate" NavigateUri="https://github.com/xbimteam"><InlineUIContainer>
+                           <TextBlock Text="https://github.com/Invicara/XbimWindowsUI"/>
+                        </InlineUIContainer></Hyperlink></TextBlock>
+                  <TextBlock Margin="0,3" ><Hyperlink RequestNavigate="Link_RequestNavigate" NavigateUri="https://github.com/xbimteam"><InlineUIContainer>
+                           <TextBlock Text="https://github.com/Invicara/XbimEssentials"/>
+                        </InlineUIContainer></Hyperlink></TextBlock>
+                  <TextBlock Margin="0,3" ><Hyperlink RequestNavigate="Link_RequestNavigate" NavigateUri="https://github.com/xbimteam"><InlineUIContainer>
+                           <TextBlock Text="https://github.com/Invicara/XbimGeometry"/>
+                        </InlineUIContainer></Hyperlink></TextBlock>
                </StackPanel>
             </TabItem>
             <TabItem Header="Assemblies">

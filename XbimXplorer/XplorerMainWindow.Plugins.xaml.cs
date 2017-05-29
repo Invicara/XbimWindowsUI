@@ -402,7 +402,8 @@ namespace XbimXplorer
          private void OpenOrFocusPluginWindow(Type tp)
          {
             bool pluginWindowIsInitialized = false;
-            var v = _retainedControls[tp];
+            SinglePluginItem v = null;
+            _retainedControls.TryGetValue(tp, out v);
             if (v != null)
             {
                var anchorableTest = v.UiObject as LayoutAnchorable;

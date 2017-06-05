@@ -220,6 +220,11 @@ namespace XbimXplorer
             return;
          if (_pluginWindows.Contains(asPWin))
             return;
+
+         //(instance as UserControl).Loaded += PluginWindowLoaded;
+         //(instance as UserControl).Unloaded += PluginWindowUnloaded;
+         //(instance as UserControl).IsVisibleChanged += PluginWindowVisibleChanged;
+
          var menuWindow = ShowPluginWindow(asPWin, true);
          // if returned the window must be retained.
          var item = new SinglePluginItem()
@@ -231,6 +236,7 @@ namespace XbimXplorer
          if ((_retainedControls[type].UiObject as LayoutAnchorable) != null)
          {
             (_retainedControls[type].UiObject as LayoutAnchorable).IsActive = true;
+            //(_retainedControls[type].UiObject as LayoutAnchorable).Hiding += PluginWindowHiding;
          }
       }
 
@@ -314,6 +320,7 @@ namespace XbimXplorer
                   // preparing user control
                   asControl.HorizontalAlignment = HorizontalAlignment.Stretch;
                   asControl.VerticalAlignment = VerticalAlignment.Stretch;
+
                   //set data binding
                   pluginWindow.BindUi(MainWindow);
 
@@ -406,22 +413,61 @@ namespace XbimXplorer
             _retainedControls.TryGetValue(tp, out v);
             if (v != null)
             {
-               var anchorableTest = v.UiObject as LayoutAnchorable;
-               if (anchorableTest != null)
+               var anchorableTest = v.UiObject as LayoutContent;
+               // The plugin is already loaded in the memory. We need to figure out whether it is already loaded in the UI. There are a few things to check before it is certain that the plugin is still there
+               // 1. From the Plugin itself whether it is Loaded and Visible
+               var plgInW = anchorableTest.Content as Window;
+               if (plgInW != null)
                {
-                  if (!anchorableTest.IsActive && !anchorableTest.IsAutoHidden && !anchorableTest.IsHidden)
-                  {
-                     // Remove out of data information
-                     _retainedControls.Remove(tp);
-                     _pluginWindows.Remove(v.PluginInterface);
-                     pluginWindowIsInitialized = false;
-                  }
-                  else
-                     pluginWindowIsInitialized = true;
+                  if (plgInW.IsLoaded && plgInW.IsVisible)
+                     return;     // It is already Loaded and Visible
                }
-            }
+         
+               var plgInUC = anchorableTest.Content as UserControl;
+               if (plgInUC != null)
+               {
+                  if (plgInUC.IsLoaded && plgInUC.IsVisible)
+                     return;     // It is already Loaded and Visible, or it is AutoHidden
 
-            if (!_retainedControls.ContainsKey(tp) || !pluginWindowIsInitialized)
+                  if (anchorableTest.Parent is LayoutDocumentPane || anchorableTest.Parent is LayoutAnchorablePane)
+                  {
+                     // If it is docked under the LayoutDocumentPane or another LayoutAnchorablePane, it should be active there even though it might be Unloaded (e.g. when the Tab is not in focus)
+                     return;
+                  }
+
+                  // Item might be not in focus as a tab item to any of the possible panel. Search whether it is there
+                  if (plgInUC.Parent is Xceed.Wpf.AvalonDock.DockingManager)
+                  {
+                     Xceed.Wpf.AvalonDock.DockingManager dockMgr = plgInUC.Parent as Xceed.Wpf.AvalonDock.DockingManager;
+                     if (dockMgr.Layout.Children.Count() > 0)
+                     {
+                        foreach (LayoutElement layoutElem in dockMgr.Layout.Children)
+                        {
+                           // Layout Panel may be recursive
+                           if (layoutElem is LayoutPanel)
+                              if (LocateCOntrolInLayoutPanel(layoutElem as LayoutPanel, plgInUC))
+                                 return;
+
+                           if (layoutElem is LayoutAnchorSide)
+                           {
+                              foreach (LayoutAnchorGroup lyG in (layoutElem as LayoutAnchorSide).Children)
+                              {
+                                 foreach (LayoutAnchorable lyGA in lyG.Children)
+                                 {
+                                    if (lyGA.Content == plgInUC)
+                                       return;     // The item is already in a LayoutAnchorGroup, probably is AutoHidden
+                                 }
+                              }
+                           }
+                        }
+                     }
+                  }
+               }
+
+               // If the status is not any of the above, show the plugin again
+               ShowPluginWindow(v.PluginInterface, true);
+            }
+            else
             {
                IXbimXplorerPluginWindow instance;
                if (_retainedControls.ContainsKey(tp))
@@ -456,13 +502,88 @@ namespace XbimXplorer
                }
                return;
             }
-            var anchorable = v.UiObject as LayoutAnchorable;
-            if (anchorable == null)
-                  return;
-            if (anchorable.IsHidden)
-                  anchorable.Show();
-            anchorable.IsActive = true;
          }
+
+      private bool LocateCOntrolInLayoutPanel (LayoutPanel layoutElem, UserControl controlToLocate)
+      { 
+         foreach (ILayoutPanelElement el in (layoutElem as LayoutPanel).Children)
+         {
+            if (el is LayoutPanel)
+            {
+               return LocateCOntrolInLayoutPanel(el as LayoutPanel, controlToLocate);
+            }
+
+            if (el is LayoutDocumentPaneGroup)
+            {
+               foreach (ILayoutDocumentPane lPane in (el as LayoutDocumentPaneGroup).Children)
+               {
+                  foreach (LayoutContent la in lPane.Children)
+                  {
+                     if (la.Content == controlToLocate)
+                        return true;
+                  }
+               }
+            }
+
+            if (el is LayoutDocumentPane)
+            {
+               foreach (LayoutContent lDoc in (el as LayoutDocumentPane).Children)
+               {
+                  if (lDoc.Content == controlToLocate)
+                     return true;
+               }
+            }
+
+            if (el is LayoutAnchorablePaneGroup)
+            {
+               foreach (ILayoutAnchorablePane lPane in (el as LayoutAnchorablePaneGroup).Children)
+               {
+                  foreach (LayoutAnchorable la in lPane.Children)
+                  {
+                     if (la.Content == controlToLocate)
+                        return true;
+                  }
+               }
+            }
+
+            if (el is LayoutAnchorablePane)
+            {
+               var elP = el as LayoutAnchorablePane;
+               foreach (LayoutAnchorable la in elP.Children)
+               {
+                  if (la.Content == controlToLocate)
+                     return true;
+               }
+            }
+         }
+
+         return false;
+      }
+
+         //private void PluginWindowHiding(object sender, EventArgs eventArgs)
+         //{
+         //   var a = sender as LayoutAnchorable;
+         //   Console.WriteLine("LayoutAnchorable (" + a.Content.ToString() + ") goes into Hiding");
+         //}
+
+         //private void PluginWindowLoaded(object sender, EventArgs eventArgs)
+         //{
+         //   dynamic a = Convert.ChangeType(sender, sender.GetType());
+         //   Console.WriteLine(sender.ToString() + " is now Loaded, with Parent: " + a.Parent.ToString());
+         //}
+
+         //private void PluginWindowUnloaded(object sender, EventArgs eventArgs)
+         //{
+         //   dynamic a = Convert.ChangeType(sender, sender.GetType()); ;
+         //   Console.WriteLine(sender.ToString() + " is now Unloaded, from Parent: " + a.Parent.ToString());
+         //}
+
+         //private void PluginWindowVisibleChanged(object sender, DependencyPropertyChangedEventArgs args)
+         //{
+         //   var a = sender;
+         //   Console.WriteLine(sender.ToString() + " visibility value changed from " + args.OldValue.ToString() + " to " + args.NewValue);
+         //}
+
 
         private void PluginWindowClosed(object sender, EventArgs eventArgs)
         {

@@ -401,7 +401,6 @@
       <DependentUpon>wdwCommands.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\Annotations.cs" />
-    <Compile Include="xBimFederation.cs" />
     <Compile Include="XplorerMainWindow.Logging.xaml.cs">
       <DependentUpon>XplorerMainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

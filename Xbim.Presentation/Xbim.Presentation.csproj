@@ -245,6 +245,7 @@
     <Compile Include="FederatedModel\FederatedModelsGrid.xaml.cs">
       <DependentUpon>FederatedModelsGrid.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FederatedModel\xBimFederation.cs" />
     <Compile Include="IfcGroupsViewModel.cs" />
     <Compile Include="HistoryCollection.cs" />
     <Compile Include="IfcMetaDataControl.xaml.cs">

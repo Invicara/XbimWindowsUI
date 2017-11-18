@@ -28,6 +28,7 @@
       <Label x:Name="label_Copy3" Content="File Name" HorizontalAlignment="Left" Margin="10,0,0,0" Width="81" Height="26" VerticalAlignment="Bottom"/>
       <TextBox x:Name="textBox_FederatedFileName" Margin="120,0,110,3" TextWrapping="Wrap" Height="23" VerticalAlignment="Bottom" TextChanged="textBox_FederatedFileName_TextChanged"/>
       <Button x:Name="button_BrowseFederatedFileName" Content="Browse ..." Margin="0,0,10,6" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" Click="button_BrowseFederatedFileName_Click"/>
+      <Button x:Name="button_SaveExit" Content="Save &amp; Exit" HorizontalAlignment="Left" Margin="10,9,0,0" Grid.Row="2" VerticalAlignment="Top" Width="81" Height="27" ToolTip="Save federation defintion and exit without opening the models" Click="button_SaveExit_Click"/>
 
    </Grid>
 </Window>

@@ -445,7 +445,7 @@ namespace XbimXplorer
                         {
                            // Layout Panel may be recursive
                            if (layoutElem is LayoutPanel)
-                              if (LocateCOntrolInLayoutPanel(layoutElem as LayoutPanel, plgInUC))
+                              if (LocateControlInLayoutPanel(layoutElem as LayoutPanel, plgInUC))
                                  return;
 
                            if (layoutElem is LayoutAnchorSide)
@@ -504,13 +504,13 @@ namespace XbimXplorer
             }
          }
 
-      private bool LocateCOntrolInLayoutPanel (LayoutPanel layoutElem, UserControl controlToLocate)
+      private bool LocateControlInLayoutPanel (LayoutPanel layoutElem, UserControl controlToLocate)
       { 
          foreach (ILayoutPanelElement el in (layoutElem as LayoutPanel).Children)
          {
             if (el is LayoutPanel)
             {
-               return LocateCOntrolInLayoutPanel(el as LayoutPanel, controlToLocate);
+               return LocateControlInLayoutPanel(el as LayoutPanel, controlToLocate);
             }
 
             if (el is LayoutDocumentPaneGroup)
@@ -560,29 +560,13 @@ namespace XbimXplorer
          return false;
       }
 
-         //private void PluginWindowHiding(object sender, EventArgs eventArgs)
-         //{
-         //   var a = sender as LayoutAnchorable;
-         //   Console.WriteLine("LayoutAnchorable (" + a.Content.ToString() + ") goes into Hiding");
-         //}
+      public bool HasFloatingWindowChild()
+      {
+         if (this.MainPanel.Root.FloatingWindows.Count > 0)
+            return true;
 
-         //private void PluginWindowLoaded(object sender, EventArgs eventArgs)
-         //{
-         //   dynamic a = Convert.ChangeType(sender, sender.GetType());
-         //   Console.WriteLine(sender.ToString() + " is now Loaded, with Parent: " + a.Parent.ToString());
-         //}
-
-         //private void PluginWindowUnloaded(object sender, EventArgs eventArgs)
-         //{
-         //   dynamic a = Convert.ChangeType(sender, sender.GetType()); ;
-         //   Console.WriteLine(sender.ToString() + " is now Unloaded, from Parent: " + a.Parent.ToString());
-         //}
-
-         //private void PluginWindowVisibleChanged(object sender, DependencyPropertyChangedEventArgs args)
-         //{
-         //   var a = sender;
-         //   Console.WriteLine(sender.ToString() + " visibility value changed from " + args.OldValue.ToString() + " to " + args.NewValue);
-         //}
+         return false;
+      }
 
 
         private void PluginWindowClosed(object sender, EventArgs eventArgs)

@@ -279,9 +279,8 @@
     <Reference Include="PresentationFramework">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="Xbim.CobieExpress, Version=4.0.0.0, Culture=neutral, PublicKeyToken=11e3655e576ec5a9, processorArchitecture=AMD64">
-      <HintPath>..\packages\Xbim.Essentials.4.0.27\lib\net40\Xbim.CobieExpress.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Xbim.CobieExpress">
+      <HintPath>..\packages\Xbim.Essentials.4.0.29\lib\net40\Xbim.CobieExpress.dll</HintPath>
     </Reference>
     <Reference Include="Xbim.Common, Version=4.0.0.0, Culture=neutral, PublicKeyToken=11e3655e576ec5a9, processorArchitecture=AMD64">
       <HintPath>..\packages\Xbim.Essentials.4.0.27\lib\net40\Xbim.Common.dll</HintPath>
@@ -290,21 +289,18 @@
     <Reference Include="Xbim.Geometry.Engine.Interop">
       <HintPath>..\packages\Xbim.Geometry.4.0.14\lib\net40\Xbim.Geometry.Engine.Interop.dll</HintPath>
     </Reference>
-    <Reference Include="Xbim.Ifc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=11e3655e576ec5a9, processorArchitecture=AMD64">
-      <HintPath>..\packages\Xbim.Essentials.4.0.27\lib\net40\Xbim.Ifc.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Xbim.Ifc">
+      <HintPath>..\packages\Xbim.Essentials.4.0.29\lib\net40\Xbim.Ifc.dll</HintPath>
     </Reference>
-    <Reference Include="Xbim.Ifc.Extensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=11e3655e576ec5a9, processorArchitecture=AMD64">
-      <HintPath>..\packages\Xbim.Essentials.4.0.27\lib\net40\Xbim.Ifc.Extensions.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Xbim.Ifc.Extensions">
+      <HintPath>..\packages\Xbim.Essentials.4.0.29\lib\net40\Xbim.Ifc.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="Xbim.Ifc2x3, Version=4.0.0.0, Culture=neutral, PublicKeyToken=11e3655e576ec5a9, processorArchitecture=AMD64">
       <HintPath>..\packages\Xbim.Essentials.4.0.27\lib\net40\Xbim.Ifc2x3.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Xbim.Ifc2x3.IO, Version=4.0.0.0, Culture=neutral, PublicKeyToken=11e3655e576ec5a9, processorArchitecture=AMD64">
-      <HintPath>..\packages\Xbim.Essentials.4.0.27\lib\net40\Xbim.Ifc2x3.IO.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Xbim.Ifc2x3.IO">
+      <HintPath>..\packages\Xbim.Essentials.4.0.29\lib\net40\Xbim.Ifc2x3.IO.dll</HintPath>
     </Reference>
     <Reference Include="Xbim.Ifc4, Version=4.0.0.0, Culture=neutral, PublicKeyToken=11e3655e576ec5a9, processorArchitecture=AMD64">
       <HintPath>..\packages\Xbim.Essentials.4.0.27\lib\net40\Xbim.Ifc4.dll</HintPath>
@@ -319,9 +315,8 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Xbim.Tessellator, Version=4.0.0.0, Culture=neutral, PublicKeyToken=11e3655e576ec5a9, processorArchitecture=AMD64">
-      <HintPath>..\packages\Xbim.Essentials.4.0.27\lib\net40\Xbim.Tessellator.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Xbim.Tessellator">
+      <HintPath>..\packages\Xbim.Essentials.4.0.29\lib\net40\Xbim.Tessellator.dll</HintPath>
     </Reference>
     <Reference Include="Xceed.Wpf.AvalonDock, Version=2.0.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
       <HintPath>..\packages\AvalonDock.2.0.2000\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
@@ -544,16 +539,16 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Xbim.Presentation\Xbim.Presentation.csproj">
-      <Project>{89f98e53-de4e-4427-8244-d5934ad08849}</Project>
-      <Name>Xbim.Presentation</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="BIM-Assure.ico" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="BIM-Assure-logo.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Xbim.Presentation\Xbim.Presentation.csproj">
+      <Project>{89f98e53-de4e-4427-8244-d5934ad08849}</Project>
+      <Name>Xbim.Presentation</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

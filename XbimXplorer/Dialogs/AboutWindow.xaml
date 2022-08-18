@@ -3,21 +3,19 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="AboutWindow" Height="340" Width="600" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" WindowStyle="None"
         Deactivated="AboutWindow_OnDeactivated"
-        MouseLeftButtonDown="UserControl_MouseLeftButtonDown" Icon="pack://siteoforigin:,,,/xBIM.ico"
+        MouseLeftButtonDown="UserControl_MouseLeftButtonDown" Icon="pack://siteoforigin:,,,/Invicara.ico"
         >
     <Border Padding="5" BorderBrush="Black" BorderThickness="1">
         <Grid >
 
             
-            <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="xBIM Xplorer" VerticalAlignment="Top" FontSize="24" />
-            <TextBlock Margin="10,42,0,0" TextWrapping="Wrap">This application is a demonstrator of the xBIM toolkit.</TextBlock>
+            <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="IPA IfcXplorer" VerticalAlignment="Top" FontSize="24" />
+            <TextBlock Margin="10,42,0,0" TextWrapping="Wrap">Application to generate Invicara Platform package file from IFC using Xbim</TextBlock>
             <TabControl Margin="10,65,10,10">
                 <TabItem Header="Application">
                     <StackPanel Margin="10" >
                         <TextBlock Margin="0,3" TextWrapping="Wrap" >
-                            The xBIM toolkit is an Open Source software initiative to help software developers and
-                            researchers to support the next generation of BIM tools. Unlike other open source application
-                            xBIM license is compatible with commercial environments.
+                            This application uses xBIM toolkit, which is an Open Source software initiative to help software developers and researchers to support the next generation of BIM tools. Notice on xBIM license can be found here:
                         </TextBlock>
                         <TextBlock Margin="0,3" >
                             <Hyperlink RequestNavigate="Link_RequestNavigate" NavigateUri="https://github.com/xBimTeam/XbimEssentials/blob/master/LICENCE.md">
@@ -25,12 +23,15 @@
 				            </Hyperlink>
                         </TextBlock>
                         <TextBlock TextWrapping="Wrap" Margin="0,3" Text="{Binding AppVersion}" />
-                        <TextBlock TextWrapping="Wrap" Margin="0,3" Text="{Binding FileVersion}" />
+                        <TextBlock TextWrapping="Wrap" Margin="0,3" Text="The original source codes for Xbim can be found here:" />
                         <TextBlock Margin="0,3" >
                             <Hyperlink RequestNavigate="Link_RequestNavigate" NavigateUri="https://github.com/xbimteam">
 					            <TextBlock Text="https://github.com/xbimteam"/>
 				            </Hyperlink>
                         </TextBlock>
+                        <TextBlock Margin="0,3" ><Hyperlink RequestNavigate="Link_RequestNavigate" NavigateUri="https://github.com/xbimteam"><InlineUIContainer>
+                           <TextBlock Text="https://github.com/Invicara/XbimWindowsUI"/>
+                        </InlineUIContainer></Hyperlink></TextBlock>
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="Assemblies"  GotFocus="LoadAssemblies" >

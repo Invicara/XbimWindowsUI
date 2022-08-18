@@ -31,7 +31,7 @@ namespace XbimXplorer.Dialogs
             DataContext = this;
             // Logo.Source = new BitmapImage(new Uri(@"pack://application:,,/xBIM.ico", UriKind.RelativeOrAbsolute));
             _assembly = Assembly.GetEntryAssembly();
-            using (var res = _assembly.GetManifestResourceStream("XbimXplorer.xBIM.ico"))
+            using (var res = _assembly.GetManifestResourceStream("XbimXplorer.Invicara.ico"))
             {
                 var imageSource = new BitmapImage();
                 imageSource.BeginInit();

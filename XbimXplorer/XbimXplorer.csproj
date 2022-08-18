@@ -11,6 +11,7 @@
       visualised both sematically and graphically, and supports a range of plugins to perform actions such as BCF exchange, and COBie export
 		</Description>
 		<ApplicationIcon />
+		<AssemblyName>IPAIfcXplorer</AssemblyName>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net472|AnyCPU'">
 		<OutputPath>..\Output\Debug\</OutputPath>
@@ -45,9 +46,16 @@
 		<Resource Include="**\*.png" />
 	</ItemGroup>
 	<ItemGroup>
+	  <Compile Remove="xBimFederation.cs" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Remove="Invicara.ico" />
 		<None Remove="xBIM.ico" />
 	</ItemGroup>
 	<ItemGroup>
+		<EmbeddedResource Include="Invicara.ico">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</EmbeddedResource>
 		<EmbeddedResource Include="xBIM.ico">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</EmbeddedResource>

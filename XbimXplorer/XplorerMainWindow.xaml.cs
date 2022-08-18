@@ -102,8 +102,8 @@ namespace XbimXplorer
             Dispatcher.BeginInvoke(new Action(delegate
             {
                 Title = string.IsNullOrEmpty(ifcFilename)
-                    ? "Xbim Xplorer" :
-                    "Xbim Xplorer - [" + ifcFilename + "]";
+                    ? "IPA IfcXplorer" :
+                    "IPA IfcXplorer - [" + ifcFilename + "]";
             }));
         }
 

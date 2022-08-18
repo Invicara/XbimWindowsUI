@@ -1,4 +1,12 @@
-﻿using System.Collections.Generic;
+﻿/*
+* Modification notice:
+* @Author: Fan Rong (fan.rong@invicara.com)
+* This is a modified version of the code that fixes issue related to the TreeView in the Xplorer:
+* - The tree view now works also with a federated model
+* - the tree view group tab also now works for a federated model
+*/
+
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
@@ -6,6 +14,7 @@ using System.Windows;
 using System.Windows.Controls;
 using PropertyTools.Wpf;
 using Xbim.Common;
+using Xbim.Common.Federation;
 using Xbim.Ifc;
 using Xbim.Ifc.ViewModels;
 using Xbim.Ifc4.Interfaces;
@@ -26,7 +35,21 @@ namespace Xbim.Presentation
             if (e.AddedItems.Count <= 0)
                 return;
             var p = ((IXbimViewModel)(e.AddedItems[0])).Entity;
+            /*
+                * Modification notice:
+                * @Author: Fan Rong (fan.rong@invicara.com)
+                * This is a modified codes that fixes issue :
+                * p could be null, when it is Federated model and the selected node is on the sub-model node, need check if p is null
+                * 
+            */
+            if (p == null)
+            {
+                SelectedEntity = null;
+                return;    
+            }
+
             var p2 = SelectedEntity;
+
             if (p2 == null)
                 SelectedEntity = p;
             else if (!(Equals(p.Model, p2.Model) && p.EntityLabel==p2.EntityLabel)) 
@@ -325,8 +348,23 @@ namespace Xbim.Presentation
             if (project != null)
             {
                 ChildrenPath ="Children";
-                ObservableCollection<XbimModelViewModel> svList = new ObservableCollection<XbimModelViewModel>();  
-                svList.Add(new XbimModelViewModel(project, null));
+                //ObservableCollection<XbimModelViewModel> svList = new ObservableCollection<XbimModelViewModel>();  
+                //svList.Add(new XbimModelViewModel(project, null));
+                ObservableCollection<XbimModelViewModel> svList = new ObservableCollection<XbimModelViewModel>();
+                XbimModelViewModel topViewNode = new XbimModelViewModel(project, null);
+                svList.Add(topViewNode);
+                if (Model.IsFederation)
+                {
+                    foreach (IReferencedModel mModel in Model.ReferencedModels)
+                    {
+                        IfcStore memberModel = mModel.Model as IfcStore;
+                        if (memberModel != null)
+                        {
+                            XbimRefModelViewModel refViewNode = new XbimRefModelViewModel(mModel, topViewNode);
+                            topViewNode.AddRefModel(refViewNode);
+                        }
+                    }
+                }
                 HierarchySource = svList;
             }
         }
@@ -369,17 +407,15 @@ namespace Xbim.Presentation
         private void ViewGroups()
         {
             System.Collections.IEnumerable list = Enumerable.Empty<IfcGroupsViewModel>();
-            if (Model != null && !string.IsNullOrEmpty(Model.FileName))
+            //if (Model != null && !string.IsNullOrEmpty(Model.FileName))
+            if (Model != null)
             {
+                var glist = new List<IfcGroupsViewModel>();
                 IfcGroupsViewModel v = new IfcGroupsViewModel(Model);
-                if (v.Children.Any())
-                {
-                    ChildrenPath = "Children";
-                    var glist = new List<IfcGroupsViewModel>();
-                    glist.Add(v);
-                    HierarchySource = glist;
-                    return;
-                }
+                ChildrenPath = "Children";
+                glist.Add(v);
+                HierarchySource = glist;
+                return;
             }
             HierarchySource = list;
         }

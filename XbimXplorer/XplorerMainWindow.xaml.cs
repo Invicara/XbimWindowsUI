@@ -702,6 +702,12 @@ namespace XbimXplorer
        
         private void CreateFederationCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
+            var inputNameDlg = new InputWindow();
+
+            var inputNameDone = inputNameDlg.ShowDialog();
+            if (!inputNameDone.Value)
+                return;
+
             var dlg = new OpenFileDialog
             {
                 Title = "Select model files to federate.",
@@ -715,11 +721,10 @@ namespace XbimXplorer
             if (!done.Value)
                 return;
 
-            FederationFromDialogbox(dlg);
+            FederationFromDialogbox(inputNameDlg.ModelName, dlg);
         }
 
-
-        private void FederationFromDialogbox(OpenFileDialog dlg)
+        private void FederationFromDialogbox(string modelName, OpenFileDialog dlg)
         {
             if (!dlg.FileNames.Any())
                 return;
@@ -751,7 +756,7 @@ namespace XbimXplorer
                     using (var txn = fedModel.BeginTransaction())
                     {
                         var project = fedModel.Instances.New<Xbim.Ifc2x3.Kernel.IfcProject>();
-                        project.Name = "Default Project Name";
+                        project.Name = modelName; //"Default Project Name";
                         project.Initialize(ProjectUnits.SIUnitsUK);
                         txn.Commit();
                     }
@@ -800,8 +805,8 @@ namespace XbimXplorer
             ModelProvider.ObjectInstance = fedModel;
             ModelProvider.Refresh();
         }
-        
-#endregion
+
+        #endregion
 
         /// <summary>
         /// 

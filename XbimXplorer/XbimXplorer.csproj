@@ -46,9 +46,6 @@
 		<Resource Include="**\*.png" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Compile Remove="xBimFederation.cs" />
-	</ItemGroup>
-	<ItemGroup>
 		<None Remove="Invicara.ico" />
 		<None Remove="xBIM.ico" />
 	</ItemGroup>

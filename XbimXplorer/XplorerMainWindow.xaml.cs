@@ -377,7 +377,9 @@ namespace XbimXplorer
 
         private void ApplyWorkarounds(IfcStore model)
         {
-            model.AddRevitWorkArounds();
+            //Comment out following line as it is removed from Xbim.Geometry.Engine.Interop after 5.1.437 (by Raymond)
+            //model.AddRevitWorkArounds();
+
             model.AddWorkAroundTrimForPolylinesIncorrectlySetToOneForEntireCurve();
         }
 

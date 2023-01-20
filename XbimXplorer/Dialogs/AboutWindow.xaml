@@ -29,8 +29,11 @@
 					            <TextBlock Text="https://github.com/xbimteam"/>
 				            </Hyperlink>
                         </TextBlock>
-                        <TextBlock Margin="0,3" ><Hyperlink RequestNavigate="Link_RequestNavigate" NavigateUri="https://github.com/xbimteam"><InlineUIContainer>
+                        <TextBlock Margin="0,3" ><Hyperlink RequestNavigate="Link_RequestNavigate" NavigateUri="https://github.com/Invicara/XbimWindowsUI"><InlineUIContainer>
                            <TextBlock Text="https://github.com/Invicara/XbimWindowsUI"/>
+                        </InlineUIContainer></Hyperlink></TextBlock>
+                        <TextBlock Margin="0,3" ><Hyperlink RequestNavigate="Link_RequestNavigate" NavigateUri="https://github.com/Invicara/XbimGeometry"><InlineUIContainer>
+                           <TextBlock Text="https://github.com/Invicara/XbimGeometry"/>
                         </InlineUIContainer></Hyperlink></TextBlock>
                     </StackPanel>
                 </TabItem>

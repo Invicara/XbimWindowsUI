@@ -35,6 +35,9 @@
                         <TextBlock Margin="0,3" ><Hyperlink RequestNavigate="Link_RequestNavigate" NavigateUri="https://github.com/Invicara/XbimGeometry"><InlineUIContainer>
                            <TextBlock Text="https://github.com/Invicara/XbimGeometry"/>
                         </InlineUIContainer></Hyperlink></TextBlock>
+                        <TextBlock Margin="0,3" ><Hyperlink RequestNavigate="Link_RequestNavigate" NavigateUri="https://github.com/Invicara/XbimEssentials"><InlineUIContainer>
+                           <TextBlock Text="https://github.com/Invicara/XbimEssentials"/>
+                        </InlineUIContainer></Hyperlink></TextBlock>
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="Assemblies"  GotFocus="LoadAssemblies" >

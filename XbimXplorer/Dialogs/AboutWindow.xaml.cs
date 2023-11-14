@@ -29,21 +29,23 @@ namespace XbimXplorer.Dialogs
         {
             InitializeComponent();
             DataContext = this;
-            // Logo.Source = new BitmapImage(new Uri(@"pack://application:,,/xBIM.ico", UriKind.RelativeOrAbsolute));
+
+             // Logo.Source = new BitmapImage(new Uri(@"pack://application:,,/xBIM.ico", UriKind.RelativeOrAbsolute));
+
             _assembly = Assembly.GetEntryAssembly();
-            using (var res = _assembly.GetManifestResourceStream("XbimXplorer.Invicara.ico"))
-            {
-                var imageSource = new BitmapImage();
-                imageSource.BeginInit();
-                imageSource.StreamSource = res;
-                imageSource.EndInit();
-                
-                // Assign the Source property of your image
-                Logo.Source = imageSource;
-            }
-            
+            //using (var res = _assembly.GetManifestResourceStream("XbimXplorer.IPA.ico"))
+            //{
+            //    var imageSource = new BitmapImage();
+            //    imageSource.BeginInit();
+            //    imageSource.StreamSource = res;
+            //    imageSource.EndInit();
+
+            // Assign the Source property of your image
+            //    Logo.Source = imageSource;
+            //}
+
             // Logo.Source = new BitmapImage(new Uri(@"pack://application:,,/xBIM.ico", UriKind.RelativeOrAbsolute));
-            
+            Logo.Source = new BitmapImage(new Uri(@"pack://siteoforigin:,,,/IPA.ico", UriKind.RelativeOrAbsolute));
         }
 
         private void AboutWindow_OnDeactivated(object sender, EventArgs e)

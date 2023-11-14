@@ -34,6 +34,9 @@
 			<DependentUpon>Settings.settings</DependentUpon>
 		</Compile>
 		<Compile Update="Settings.Designer.cs" AutoGen="True" DependentUpon="Settings.settings" />
+		<None Update="IPA.ico">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 		<None Update="Properties\Settings.settings">
 			<Generator>SettingsSingleFileGenerator</Generator>
 			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -46,13 +49,9 @@
 		<Resource Include="**\*.png" />
 	</ItemGroup>
 	<ItemGroup>
-		<None Remove="Invicara.ico" />
 		<None Remove="xBIM.ico" />
 	</ItemGroup>
 	<ItemGroup>
-		<EmbeddedResource Include="Invicara.ico">
-		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</EmbeddedResource>
 		<EmbeddedResource Include="xBIM.ico">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</EmbeddedResource>
